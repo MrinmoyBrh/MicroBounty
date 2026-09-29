@@ -1,0 +1,8 @@
+node_modules
+npm_debug.log
+.env
+.git
+.gitignore
+README.md
+coverage
+.DS_Store
