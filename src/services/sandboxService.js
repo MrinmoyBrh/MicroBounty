@@ -1,4 +1,4 @@
-const Docker = require('dockrode');
+const Docker = require('dockerode');
 const docker = new Docker({ socketPath: '/var/run/docker.sock'});
 
 async function executeSandbox({ code, language, testScript}) {

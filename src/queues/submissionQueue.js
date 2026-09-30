@@ -43,4 +43,4 @@ submissionWorker.on('failed', (job, err) => {
   console.error(`[Job ${job.id}] Failed: ${err.message}`);
 });
 
-module.exports = { submissionQueue };
+module.exports = { submissionQueue, connection };
