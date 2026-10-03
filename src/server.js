@@ -4,7 +4,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const connectDB = require('./config/db');
 const Submission = require('./models/Submission');
-const {submissionQueue} = require('./queues/submissionQueue');
+const { submissionQueue } = require('./queues/submissionQueue');
 
 const app = express();
 
@@ -12,30 +12,28 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-connectDB();
-
-//Health check
+// Health Check
 app.get('/health', (req, res) => {
-    res.status(200).json({status: 'OK', timestamp :new Date() });
+  res.status(200).json({ status: 'OK', timestamp: new Date() });
 });
 
-//Enqueue code Submission
-app.post('/api/submissions', async (req, res) =>{
-    try{
-        const {language, code, testScript} = req.body;
+// Enqueue Code Submission
+app.post('/api/submissions', async (req, res) => {
+  try {
+    const { language, code, testScript } = req.body;
 
-        if(!code || !testScript){
-            return res.status(400).json({error: 'Code andtestScript are required.'});
-        }
+    if (!code || !testScript) {
+      return res.status(400).json({ error: 'Code and testScript are required.' });
+    }
 
-        const submission = await Submission.create({
-            language: language || 'javascript',
-            code,
-            testScript,
-            status: 'PENDING'
-        });
+    const submission = await Submission.create({
+      language: language || 'javascript',
+      code,
+      testScript,
+      status: 'PENDING'
+    });
 
-        const job = await submissionQueue.add('execute-submission', {
+    const job = await submissionQueue.add('execute-submission', {
       submissionId: submission._id.toString(),
       language: submission.language,
       code: submission.code,
@@ -64,6 +62,12 @@ app.get('/api/submissions/:id', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`[Server] API Gateway running on port ${PORT}`);
-});
+
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`[Server] API Gateway running on port ${PORT}`);
+  });
+};
+
+startServer();

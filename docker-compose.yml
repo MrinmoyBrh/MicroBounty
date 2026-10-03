@@ -1,0 +1,19 @@
+﻿version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: microbounty-redis
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo:7.0
+    container_name: microbounty-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
